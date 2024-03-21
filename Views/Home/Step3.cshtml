@@ -15,12 +15,12 @@
 
 <h3>Nếu bạn muốn ngôi nhà trở nên ngăn nắp, gọn gàng và tinh tế hơn, hãy mạnh tay loại 6 món đồ này.</h3>
 <ol>
-    <li><a id="scroll1" href="javascript:test1()">Bát đũa thìa dùng một lần</a></li>
-    <li><a id="scroll2" href="javascript:test2()">Giẻ lau hết "date"</a></li>
-    <li><a id="scroll3" href="javascript:test3()">Chậu hoa cũ</a></li>
-    <li><a id="scroll4" href="javascript:test4()">Các mặt hàng tiêu dùng</a></li>
-    <li><a id="scroll5" href="javascript:test5()">Quà tặng khuyến mại, quà tặng miễn phí</a></li>
-    <li><a id="scroll6" href="javascript:test6()">Dây cáp hỏng hoặc không sử dụng đến</a></li>
+    <li><a id="scroll1" href="javascript:void()">Bát đũa thìa dùng một lần</a></li>
+    <li><a id="scroll2" href="javascript:void()">Giẻ lau hết "date"</a></li>
+    <li><a id="scroll3" href="javascript:void()">Chậu hoa cũ</a></li>
+    <li><a id="scroll4" href="javascript:void()">Các mặt hàng tiêu dùng</a></li>
+    <li><a id="scroll5" href="javascript:void()">Quà tặng khuyến mại, quà tặng miễn phí</a></li>
+    <li><a id="scroll6" href="javascript:void()">Dây cáp hỏng hoặc không sử dụng đến</a></li>
 </ol>
 <section id="section1">
     <h5>1. Bát đũa thìa dùng một lần</h5>
@@ -77,51 +77,88 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        
+        $("li a").each(function () {
+            $(this).click(() => {
+                var temp = $(this).attr('id').replace('scroll', 'section');
+                $('html, body').animate({
+                    scrollTop: $('#' + temp).offset().top
+                }, 200);
+            })
+        });
+        // $("#scroll1").click(function () {
+        //     $('html, body').animate({
+        //         scrollTop: $("#section1").offset().top
+        //     }, 200);
+        // });
+        // $("#scroll2").click(function () {
+        //     $('html, body').animate({
+        //         scrollTop: $("#section2").offset().top
+        //     }, 200);
+        // });
+        // $("#scroll3").click(function () {
+        //     $('html, body').animate({
+        //         scrollTop: $("#section3").offset().top
+        //     }, 200);
+        // });
+        // $("#scroll4").click(function () {
+        //     $('html, body').animate({
+        //         scrollTop: $("#section4").offset().top
+        //     }, 200);
+        // });
+        // $("#scroll5").click(function () {
+        //     $('html, body').animate({
+        //         scrollTop: $("#section5").offset().top
+        //     }, 200);
+        // });
+        // $("#scroll6").click(function () {
+        //     $('html, body').animate({
+        //         scrollTop: $("#section6").offset().top
+        //     }, 200);
+        // });
     });
 
-    function test1() {
-        $("#scroll1").click(function () {
-            $('html, body').animate({
-                scrollTop: $("#section1").offset().top
-            }, 1000);
-        });
-    }
-    function test2() {
-        $("#scroll2").click(function () {
-            $('html, body').animate({
-                scrollTop: $("#section2").offset().top
-            }, 1000);
-        });
-    }
-    function test3() {
-        $("#scroll3").click(function () {
-            $('html, body').animate({
-                scrollTop: $("#section3").offset().top
-            }, 1000);
-        });
-    }
-    function test4() {
-        $("#scroll4").click(function () {
-            $('html, body').animate({
-                scrollTop: $("#section4").offset().top
-            }, 1000);
-        });
-    }
+    // function test1() {
+    //     $("#scroll1").click(function () {
+    //         $('html, body').animate({
+    //             scrollTop: $("#section1").offset().top
+    //         }, 1000);
+    //     });
+    // }
+    // function test2() {
+    //     $("#scroll2").click(function () {
+    //         $('html, body').animate({
+    //             scrollTop: $("#section2").offset().top
+    //         }, 1000);
+    //     });
+    // }
+    // function test3() {
+    //     $("#scroll3").click(function () {
+    //         $('html, body').animate({
+    //             scrollTop: $("#section3").offset().top
+    //         }, 1000);
+    //     });
+    // }
+    // function test4() {
+    //     $("#scroll4").click(function () {
+    //         $('html, body').animate({
+    //             scrollTop: $("#section4").offset().top
+    //         }, 1000);
+    //     });
+    // }
 
-    function test5() {
-        $("#scroll5").click(function () {
-            $('html, body').animate({
-                scrollTop: $("#section5").offset().top
-            }, 1000);
-        });
-    }
+    // function test5() {
+    //     $("#scroll5").click(function () {
+    //         $('html, body').animate({
+    //             scrollTop: $("#section5").offset().top
+    //         }, 1000);
+    //     });
+    // }
 
-    function test6(){
-        $("#scroll6").click(function () {
-            $('html, body').animate({
-                scrollTop: $("#section6").offset().top
-            }, 1000);
-        });
-    }
+    // function test6(){
+    //     $("#scroll6").click(function () {
+    //         $('html, body').animate({
+    //             scrollTop: $("#section6").offset().top
+    //         }, 1000);
+    //     });
+    // }
 </script>
