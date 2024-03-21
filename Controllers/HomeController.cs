@@ -17,18 +17,5 @@ namespace NET_290_291_T35.Controllers
         {
             return View();
         }
-
-        public IActionResult Step1()
-        {
-            return View();
-        }
-        public IActionResult Step2()
-        {
-            return View();
-        }
-        public IActionResult Step3()
-        {
-            return View();
-        }
     }
 }
