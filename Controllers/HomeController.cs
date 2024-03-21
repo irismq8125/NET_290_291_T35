@@ -43,6 +43,12 @@ namespace NET_290_291_T35.Controllers
             return Ok(task);
         }
 
+        public async Task<IActionResult> DetailToDoTask(string id)
+        {
+            var item = toDoTasks.FirstOrDefault(x => x.Id.ToString() == id);
+            return Ok(item);
+        }
+
         public async Task<IActionResult> DeleteToDoTask(string id)
         {
             var item = toDoTasks.FirstOrDefault(x => x.Id.ToString() == id);

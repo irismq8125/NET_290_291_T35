@@ -10,3 +10,7 @@
     background-color: lightgray;
     border-radius:8px 0px 8px 0px;
 }
+
+.card:hover {
+    cursor: pointer;
+}

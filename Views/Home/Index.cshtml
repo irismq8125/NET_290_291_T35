@@ -14,7 +14,7 @@
     <div class="d-flex gap-3">
         <aside class="w-25 shadow rounded">
             <h4 class="text-center">Trạng thái nhiệm vụ</h4>
-            <form id="typetask" class="px-3 py-2" action="/Home/Index" method="get">
+            <div id="typetask" class="px-3 py-2">
                 <div class="d-flex justify-content-between form-check text-primary task">
                     <div class="w-100">
                         <input class="form-check-input" type="radio" name="task" value="0" id="tatca" checked>
@@ -51,7 +51,7 @@
                     </div>
                     <label class="form-check-label" for="huybo">0</label>
                 </div>
-            </form>
+            </div>
         </aside>
 
         <article class="d-grid w-75">
@@ -62,16 +62,15 @@
                     @foreach (var item in Model)
                     {
                         <div class="col mb-4">
-                            <div class="card shadow rounded @(item.Status == "1" ? "bg-success" : (item.Status == "2" ? "bg-warning" : "bg-danger"))">
-                                <div class="card-body">
+                            <div class="card shadow rounded @(item.Status == "1" ? "bg-success" : (item.Status == "2" ? "bg-warning" : "bg-danger"))" id="@item.Id">
+                                <div class="card-body" >
                                     <h5 class="card-title">@item.TaskName</h5>
                                     <p class="card-text">@item.StartDay</p>
                                     <p class="card-text">@item.EndDay</p>
-                                    @* <p class="card-text">@item.Status</p> *@
-                                    @* <p class="card-text">Trang thai</p> *@
                                     <div class="d-flex justify-content-between gap-1">
-                                        <a href="javascript:void(0)" onclick="deleted(`@(item.Id)`)" class="w-100 btn btn-outline-danger shadow rounded">Xóa</a>
+                                        <a href="javascript:void(0)" onclick="deleted('@(item.Id)')" class="w-100 btn btn-outline-danger shadow rounded">Xóa</a>
                                         <a href="#" class="w-100 btn btn-warning shadow rounded">Sửa</a>
+                                        <a href="javascript:void(0)" onclick="DetailTask('@(item.Id)')" class="w-100 btn btn-primary shadow rounded">Chi tiết</a>
                                     </div>
                                 </div>
                             </div>
@@ -133,9 +132,42 @@
 </section>
 
 <script type="text/javascript">
-    $(document).ready(() => {
-        toastr.info('You clicked Info toast');
-    });
+    // $(document).ready(() => {
+    //     toastr.info('You clicked Info toast');
+    // });
+
+    function LoadData(temp) {
+        $("#listtask").empty();
+        $.ajax({
+            type: 'POST',
+            url: '/Home/LoadData',
+            data: { trangthai: temp },
+            success: function (result) {
+                if (result.length > 0) {
+                    result.map((row) => {
+                        let r = `<div class="col mb-4">
+                                        <div class="card shadow rounded ${row.status == "1" ? "bg-success" : (row.status == "2" ? "bg-warning" : "bg-danger")}"
+                                            id="${row.id}">
+                                                <div class="card-body">
+                                                <h5 class="card-title">${row.taskName}</h5>
+                                                <p class="card-text">${row.startDay}</p>
+                                                <p class="card-text">${row.endDay}</p>
+                                                <div class="d-flex justify-content-between gap-1">
+                                                    <a href="javascript:void(0)" onclick="deleted('${row.id}')" class="w-100 btn btn-outline-danger shadow rounded">Xóa</a>
+                                                    <a href="#" class="w-100 btn btn-warning shadow rounded">Sửa</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                        $("#listtask").append(r);
+                    });
+                } else {
+                    let r = '<h4 class="text-center">Khong co du lieu</h4>';
+                    $("#listtask").append(r);
+                }
+            }
+        });
+    }
 
     $("#addtask").click(() => {
         var ten = $("#tennhiemvu").val();
@@ -150,10 +182,10 @@
             success: function (result) {
                 // Handle the response from the controller
                 if (result != null) {
-                    alert("Thêm thành công!");
-                    $("#staticBackdrop").removeClass("show");
-                    // toastr.success('Thêm nhiệm vụ thành công!');
-                    location.reload();
+                    $("#staticBackdrop").modal('hide')
+                    var temp = $("input[name='task']:checked").val();
+                    LoadData(temp);
+                    toastr.success('Thêm nhiệm vụ thành công!');
                 }
             }
         });
@@ -162,38 +194,24 @@
     $("input[name='task']").change(() => {
         var temp = $("input[name='task']:checked").val();
         // alert(temp);
-        $("#listtask").empty();
         // console.log(temp)
+        LoadData(temp);
+        
+    })
+
+    function DetailTask(id) {
+        // alert(id);
+        // $("#staticBackdrop").modal('show');
         $.ajax({
-            type: 'POST',
-            url: '/Home/LoadData',
-            data: { trangthai: temp },
+            type: 'GET',
+            url: '/Home/DetailToDoTask',
+            data: { id: id },
             success: function (result) {
-                // console.log(result)
-                if (result.length > 0) {
-                    result.map((row) => {
-                        let r = `<div class="col mb-4">
-                                    <div class="card shadow rounded ${row.status == "1" ? "bg-success" : (row.status == "2" ? "bg-warning" : "bg-danger")}">
-                                        <div class="card-body">
-                                            <h5 class="card-title">${row.taskName}</h5>
-                                            <p class="card-text">${row.startDay}</p>
-                                            <p class="card-text">${row.endDay}</p>
-                                            <div class="d-flex justify-content-between gap-1">
-                                                <a href="javascript:void(0)" onclick="deleted('${row.id}')" class="w-100 btn btn-outline-danger shadow rounded">Xóa</a>
-                                                <a href="#" class="w-100 btn btn-warning shadow rounded">Sửa</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>`;
-                        $("#listtask").append(r);
-                    });
-                } else {
-                    let r = '<h4 class="text-center">Khong co du lieu</h4>';
-                    $("#listtask").append(r);
-                }
+                alert("ID: " + result.id + "\n" + "NAME: " + result.taskName);
             }
         });
-    })
+
+    }
 
     function deleted(id) {
         $.ajax({
@@ -203,9 +221,10 @@
             success: function (result) {
                 // Handle the response from the controller
                 if (result != null) {
-                    $("#staticBackdrop").removeClass("show");
-                    alert("Xóa thành công!");
-                    location.reload();
+                    $("#staticBackdrop").modal('hide')
+                    var temp = $("input[name='task']:checked").val();
+                    LoadData(temp);
+                    toastr.success('Xóa nhiệm vụ thành công!');
                 }
             },
             error: function (xhr, status, error) {
