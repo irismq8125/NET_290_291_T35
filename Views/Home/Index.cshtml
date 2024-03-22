@@ -18,11 +18,11 @@
                 <div class="d-flex justify-content-between form-check text-primary task">
                     <div class="w-100">
                         <input class="form-check-input" type="radio" name="task" value="0" id="tatca" checked>
-                        <label class="form-check-label w-100" for="tatca">
+                        <label class="form-check-label w-100"  for="tatca">
                             Tất cả
                         </label>
                     </div>
-                    <label class="form-check-label" for="tatca">0</label>
+                    <label class="form-check-label" id="label-tatca" for="tatca">0</label>
                 </div>
                 <div class="d-flex justify-content-between form-check text-success task">
                     <div class="w-100">
@@ -31,7 +31,7 @@
                             Hoàn thành
                         </label>
                     </div>
-                    <label class="form-check-label" for="hoanthanh">0</label>
+                    <label class="form-check-label" id="label-hoanthanh" for="hoanthanh">0</label>
                 </div>
                 <div class="d-flex justify-content-between form-check text-warning task">
                     <div class="w-100">
@@ -40,7 +40,7 @@
                             Đang làm
                         </label>
                     </div>
-                    <label class="form-check-label" for="danglam">0</label>
+                    <label class="form-check-label" id="label-danglam" for="danglam">0</label>
                 </div>
                 <div class="d-flex justify-content-between form-check text-danger task">
                     <div class="w-100">
@@ -49,7 +49,7 @@
                             Hủy bỏ
                         </label>
                     </div>
-                    <label class="form-check-label" for="huybo">0</label>
+                    <label class="form-check-label" id="label-huybo" for="huybo">0</label>
                 </div>
             </div>
         </aside>
@@ -62,15 +62,16 @@
                     @foreach (var item in Model)
                     {
                         <div class="col mb-4">
-                            <div class="card shadow rounded @(item.Status == "1" ? "bg-success" : (item.Status == "2" ? "bg-warning" : "bg-danger"))" id="@item.Id">
-                                <div class="card-body" >
+                            <div class="card shadow rounded @(item.Status == "1" ? "card-done" : (item.Status == "2" ? "card-waiting" : "card-remove"))" id="@item.Id">
+                                <div class="card-body">
                                     <h5 class="card-title">@item.TaskName</h5>
-                                    <p class="card-text">@item.StartDay</p>
-                                    <p class="card-text">@item.EndDay</p>
+                                    <div class="d-flex flex-column mb-2">
+                                        <small class="card-text"><i class='bx bx-time'></i>@item.StartDay</small>
+                                        <small class="card-text"><i class='bx bx-time'></i>@item.EndDay</small>
+                                    </div>
                                     <div class="d-flex justify-content-between gap-1">
-                                        <a href="javascript:void(0)" onclick="deleted('@(item.Id)')" class="w-100 btn btn-outline-danger shadow rounded">Xóa</a>
-                                        <a href="#" class="w-100 btn btn-warning shadow rounded">Sửa</a>
-                                        <a href="javascript:void(0)" onclick="DetailTask('@(item.Id)')" class="w-100 btn btn-primary shadow rounded">Chi tiết</a>
+                                        <a href="javascript:void(0)" onclick="deleted('@(item.Id)')" class="w-100 btn btn-outline-danger shadow rounded"><i class='bx bx-bookmark-minus'></i></a>
+                                        <a href="javascript:void(0)" onclick="DetailTask('@(item.Id)')" class="w-100 btn btn-primary shadow rounded"><i class='bx bx-bookmark-minus'></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -95,9 +96,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <input type="text" id="idcard" value="" hidden/>
                     <div class="mb-3">
                         <label for="tennhiemvu" class="form-label fw-bold">Tên nhiệm vụ</label>
-                        <input type="email" class="form-control" id="tennhiemvu" placeholder="">
+                        <input type="email" class="form-control" id="tennhiemvu" value="" placeholder="">
                     </div>
                     <div class="d-flex justify-content-between gap-3">
                         <div class="mb-3 w-50">
@@ -119,7 +121,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="mota" class="form-label fw-bold">Mô tả</label>
-                        <textarea class="form-control" id="mota" rows="3"></textarea>
+                        <textarea class="form-control" id="mota" value="" rows="3"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -132,9 +134,10 @@
 </section>
 
 <script type="text/javascript">
-    // $(document).ready(() => {
-    //     toastr.info('You clicked Info toast');
-    // });
+    $(document).ready(() => {
+        // toastr.info('You clicked Info toast');
+        LoadNumber();
+    });
 
     function LoadData(temp) {
         $("#listtask").empty();
@@ -146,58 +149,94 @@
                 if (result.length > 0) {
                     result.map((row) => {
                         let r = `<div class="col mb-4">
-                                        <div class="card shadow rounded ${row.status == "1" ? "bg-success" : (row.status == "2" ? "bg-warning" : "bg-danger")}"
-                                            id="${row.id}">
-                                                <div class="card-body">
-                                                <h5 class="card-title">${row.taskName}</h5>
-                                                <p class="card-text">${row.startDay}</p>
-                                                <p class="card-text">${row.endDay}</p>
-                                                <div class="d-flex justify-content-between gap-1">
-                                                    <a href="javascript:void(0)" onclick="deleted('${row.id}')" class="w-100 btn btn-outline-danger shadow rounded">Xóa</a>
-                                                    <a href="#" class="w-100 btn btn-warning shadow rounded">Sửa</a>
-                                                </div>
+                                    <div class="card shadow rounded ${row.status == "1" ? "card-done" : (row.status == "2" ? "card-waiting" : "card-remove")}"
+                                        id="${row.id}">
+                                            <div class="card-body">
+                                            <h5 class="card-title">${row.taskName}</h5>
+                                            <div class="d-flex flex-column mb-2">
+                                                <small class="card-text"><i class='bx bx-time'></i>${row.startDay}</small>
+                                                <small class="card-text"><i class='bx bx-time'></i>${row.endDay}</small>
+                                            </div>
+                                            <div class="d-flex justify-content-between gap-1">
+                                                <a href="javascript:void(0)" onclick="deleted('${row.id}')" class="w-100 btn btn-outline-danger shadow rounded"><i class='bx bx-bookmark-minus'></i></a>
+                                                <a href="javascript:void(0)" onclick="DetailTask('${row.id}')" class="w-100 btn btn-primary shadow rounded"><i class='bx bx-bookmark-minus'></i></a>
                                             </div>
                                         </div>
-                                    </div>`;
+                                    </div>
+                                </div>`;
                         $("#listtask").append(r);
                     });
                 } else {
                     let r = '<h4 class="text-center">Khong co du lieu</h4>';
                     $("#listtask").append(r);
                 }
+                LoadNumber();
             }
         });
     }
 
+    function LoadNumber(){
+        $.ajax({
+            type: 'POST',
+            url: '/Home/LoadData',
+            data: { trangthai: "0" },
+            success: function (result) {
+                $("#label-tatca").text(result.length);
+                $("#label-hoanthanh").text($.grep(result, (x) => x.status == "1").length);
+                $("#label-danglam").text($.grep(result, (x) => x.status == "2").length);
+                $("#label-huybo").text($.grep(result, (x) => x.status == "3").length);
+            }
+        });
+    }
+
+    $("input[name='task']").change(() => {
+        var temp = $("input[name='task']:checked").val();
+        LoadData(temp);
+    })
+
+    $("#staticBackdrop").on("hide.bs.modal", () => {
+        ClearForm();
+    });
+
     $("#addtask").click(() => {
+        var id = $("#idcard").val();
         var ten = $("#tennhiemvu").val();
         var batdau = $("#thoigianbatdau").val();
         var ketthuc = $("#thoigianketthuc").val();
         var trangthai = $("#trangthai").val();
         var mota = $("#mota").val();
-        $.ajax({
-            type: 'POST',
-            url: '/Home/AddToDoTask',
-            data: { ten: ten, batdau: batdau, ketthuc: ketthuc, trangthai: trangthai, mota: mota },
-            success: function (result) {
-                // Handle the response from the controller
-                if (result != null) {
-                    $("#staticBackdrop").modal('hide')
-                    var temp = $("input[name='task']:checked").val();
-                    LoadData(temp);
-                    toastr.success('Thêm nhiệm vụ thành công!');
+        if (id == "") {
+            $.ajax({
+                type: 'POST',
+                url: '/Home/AddToDoTask',
+                data: { ten: ten, batdau: batdau, ketthuc: ketthuc, trangthai: trangthai, mota: mota },
+                success: function (result) {
+                    // Handle the response from the controller
+                    if (result != null) {
+                        $("#staticBackdrop").modal('hide')
+                        var temp = $("input[name='task']:checked").val();
+                        LoadData(temp);
+                        toastr.success('Thêm nhiệm vụ thành công!');
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: '/Home/UpdateToDoTask',
+                data: { id: id, ten: ten, batdau: batdau, ketthuc: ketthuc, trangthai: trangthai, mota: mota },
+                success: function (result) {
+                    // Handle the response from the controller
+                    if (result != null) {
+                        $("#staticBackdrop").modal('hide')
+                        var temp = $("input[name='task']:checked").val();
+                        LoadData(temp);
+                        toastr.success('Cập nhật nhiệm vụ thành công!');
+                    }
+                }
+            });
+        }
     });
-
-    $("input[name='task']").change(() => {
-        var temp = $("input[name='task']:checked").val();
-        // alert(temp);
-        // console.log(temp)
-        LoadData(temp);
-        
-    })
 
     function DetailTask(id) {
         // alert(id);
@@ -207,10 +246,31 @@
             url: '/Home/DetailToDoTask',
             data: { id: id },
             success: function (result) {
-                alert("ID: " + result.id + "\n" + "NAME: " + result.taskName);
+                console.log(result);
+                RenderModalUpdate(result);
             }
         });
 
+    }
+
+    function ClearForm() {
+        $("#tennhiemvu").val("");
+        $("#batdau").val("");
+        $("#ketthuc").val("");
+        $("#trangthai").find("option[value='1']").prop("selected", true);
+        $("#mota").val("");
+    }
+
+    function RenderModalUpdate(result) {
+        $("#staticBackdropLabel").text("Chi tiết nhiệm vụ");
+        $("#idcard").val(result.id);
+        $("#tennhiemvu").val(result.taskName);
+        $("#batdau").val(result.startDay);
+        $("#ketthuc").val(result.endDay);
+        $("#trangthai").find("option[value='" + result.status + "']").prop("selected", true);
+        $("#mota").val(result.discription);
+        $("#addtask").text("Cập nhật");
+        $("#staticBackdrop").modal('show');
     }
 
     function deleted(id) {
@@ -233,4 +293,6 @@
             }
         });
     }
+
+    
 </script>

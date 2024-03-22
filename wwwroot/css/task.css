@@ -11,6 +11,14 @@
     border-radius:8px 0px 8px 0px;
 }
 
-.card:hover {
-    cursor: pointer;
+.card-done {
+    background-color: #26E600;
+}
+
+.card-waiting {
+    background-color: #FFDD99;
+}
+
+.card-remove {
+    background-color: #FF5533;
 }

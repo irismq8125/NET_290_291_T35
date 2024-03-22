@@ -43,6 +43,19 @@ namespace NET_290_291_T35.Controllers
             return Ok(task);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UpdateToDoTask(string id, string ten, string batdau, string ketthuc, string trangthai, string mota)
+        {
+            var item = toDoTasks.FindIndex(x => x.Id.ToString() == id);
+            toDoTasks[item].TaskName = ten;
+            toDoTasks[item].StartDay = batdau;
+            toDoTasks[item].EndDay = ketthuc;
+            toDoTasks[item].Status = trangthai;
+            toDoTasks[item].Discription = mota;
+
+            return Ok(toDoTasks[item]);
+        }
+
         public async Task<IActionResult> DetailToDoTask(string id)
         {
             var item = toDoTasks.FirstOrDefault(x => x.Id.ToString() == id);
