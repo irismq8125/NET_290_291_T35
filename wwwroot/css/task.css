@@ -11,6 +11,10 @@
     border-radius:8px 0px 8px 0px;
 }
 
+#listtask .card {
+    cursor: move;
+}
+
 .card-done {
     background-color: #26E600;
 }

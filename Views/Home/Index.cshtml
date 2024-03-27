@@ -294,5 +294,18 @@
         });
     }
 
+    $(() => {
+        var panelList = $('#listtask');
+
+        panelList.sortable({
+            handle: '.card',
+            update: () => {
+                $('.card', panelList).each(function (index, elem) {
+                    var $listItem = $(elem),
+                        newIndex = $listItem.index();
+                });
+            }
+        });
+    })
     
 </script>
