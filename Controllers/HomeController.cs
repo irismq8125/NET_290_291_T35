@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using NET_290_291_T35.Models.ToDoTask;
 
 namespace NET_290_291_T35.Controllers
@@ -62,11 +62,13 @@ namespace NET_290_291_T35.Controllers
             return Ok(item);
         }
 
+        //khai báo hàm xóa dữ liệu với đầu vào id
+        [HttpPost]
         public async Task<IActionResult> DeleteToDoTask(string id)
         {
             var item = toDoTasks.FirstOrDefault(x => x.Id.ToString() == id);
             toDoTasks.Remove(item);
-            return Ok();
+            return Ok(item);
         }
     }
 }
